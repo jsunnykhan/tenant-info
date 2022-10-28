@@ -8,12 +8,12 @@ declare_id!("HibQzdWgu2JhVVHuizrYNfyvgwk7BHjaR1ZaS6ah4eYT");
 pub mod tenant_info {
     use super::*;
 
-    pub fn create_user(ctx: Context<CreateUser>, userInfo: UserInfo) -> Result<()> {
+    pub fn create_user(ctx: Context<CreateUser>) -> Result<()> {
         let user = &mut ctx.accounts.user_account;
         let authority = &mut ctx.accounts.authority;
 
-        user.name = userInfo.name;
-        user.father_name = userInfo.father_name;
+        user.name = "userInfo.name".to_string();
+        user.father_name = "userInfo.father_name".to_string();
         user.signature = authority.key();
 
         Ok(())
