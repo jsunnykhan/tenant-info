@@ -1,12 +1,12 @@
 [package]
-name = "tenant-info"
+name = "users"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "tenant_info"
+name = "users"
 
 [features]
 no-entrypoint = []
