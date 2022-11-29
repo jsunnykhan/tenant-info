@@ -12,4 +12,7 @@ pub mod tenant {
 }
 
 #[derive(Accounts)]
-pub struct Initialize {}
+pub struct Initialize <'info>{
+    #[account(mut)]
+    pub auth : Signer<'info>
+}

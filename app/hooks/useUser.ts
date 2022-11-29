@@ -84,5 +84,25 @@ export const useUser = () => {
     }
   };
 
-  return { getUserInfomation, initUser };
+  const removeUser = async (pubKey: PublicKey) => {
+    if (program) {
+      const [userPda, _] = findProgramAddressSync(
+        [USER_SEEDS, pubKey.toBuffer()],
+        program.programId
+      );
+
+      try {
+        const tx = await program.methods
+          .removeUser()
+          .accounts({
+            authority: pubKey,
+            userAccount: userPda,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
+      } catch (error) {}
+    }
+  };
+
+  return { getUserInfomation, initUser, removeUser };
 };

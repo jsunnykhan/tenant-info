@@ -1,6 +1,6 @@
 import React from "react";
 import { WalletConnectionProvider } from "../hooks/WalletConnectionProvider";
-import Header from "./Header";
+import Header from "./MenuHeader";
 
 const Layout = ({ children }: any) => {
   return (

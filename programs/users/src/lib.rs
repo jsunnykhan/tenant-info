@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
 
+// use anchor_lang::solana_program::*;
+
 declare_id!("2doNBKXzGi4Q3BfKFvkc68p4jePukDQpAtR1n8Nhzz51");
 
 #[program]
@@ -28,8 +30,15 @@ pub mod users {
         Ok(())
     }
 
-    pub fn remove_user (_ctx: Context<RemoveUser>) -> Result<()> {
+    pub fn remove_user (ctx: Context<RemoveUser>) -> Result<()> {
         // Donot remove this functions because it's a working function
+        // let user = &mut ctx.accounts.user_account;
+
+        // if user.mint.len() > 0 {
+        //     for mint in user.mint.iter() {
+        //         let (pda , _bump) =  Pubkey::find_program_address(&[b"house", &mut mint.key().as_ref()], House);
+        //     }
+        // }
         Ok(())
     }
 }

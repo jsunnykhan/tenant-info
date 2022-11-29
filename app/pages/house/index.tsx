@@ -1,10 +1,10 @@
 import React from "react";
-import HouseDetails from "../../components/house/houseDetails";
+import HouseDetails from "../../components/house/HouseDetails";
 
 const House = () => {
   return (
     <div>
-      <HouseDetails />
+      <HouseDetails  />
     </div>
   );
 };

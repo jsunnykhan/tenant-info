@@ -65,11 +65,7 @@ export const useProgram = () => {
     }
   }, [tenantId, connection, anchorWallet]);
 
-  // const userProgram: Program<Users> | undefined = useMemo(() => {
-  //   if (usersId && programProvider) {
-  //     return new anchor.Program(usersIdl, usersId, programProvider);
-  //   }
-  // }, [connection, anchorWallet, usersId]);
+  
 
   const houseProgram: Program<House> | undefined = useMemo(() => {
     if (houseId && programProvider) {

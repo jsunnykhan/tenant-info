@@ -1,9 +1,9 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { AppProps } from "next/app";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useHouse } from "../../hooks/useHouse";
+import { useUser } from "../../hooks/useUser";
 import { House } from "../../interface/house";
 import { User } from "../../interface/user";
 import SingleHouseCard from "../house/singleHouseCard";
@@ -12,6 +12,7 @@ function Profile({ user }: any) {
   const { name, address } = user;
   const { publicKey } = useWallet();
   const { getHouses } = useHouse();
+  const { removeUser } = useUser();
   const [houses, setHouses] = useState<Array<House> | []>();
 
   useEffect(() => {
@@ -46,6 +47,12 @@ function Profile({ user }: any) {
 
   return (
     <div className="felx flex-col">
+      <button
+        className="bg-gray-500 px-5 py-4 rounded hover:cursor-pointer"
+        onClick={() => removeUser(publicKey!)}
+      >
+        Remove User
+      </button>
       <div className="flex justify-between">
         <div>
           <h2 className="font-semibold text-2xl">{name}</h2>
@@ -60,9 +67,9 @@ function Profile({ user }: any) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-4 w-full gap-4">
-        {houses?.map((data: any) => (
-          <SingleHouseCard house={data} />
+      <div className="grid grid-cols-4 w-full gap-4 mt-10">
+        {houses?.map((data: any, index: number) => (
+          <SingleHouseCard house={data} key={data.name + index} />
         ))}
       </div>
     </div>
