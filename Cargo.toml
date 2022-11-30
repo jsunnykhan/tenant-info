@@ -1,6 +1,6 @@
 [workspace]
 members = ["programs/*"]
-types = "app/constants/IDL/"
+
 
 [profile.release]
 overflow-checks = true

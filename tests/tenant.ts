@@ -86,6 +86,30 @@ describe("tenant", () => {
       })
       .signers([userWallet])
       .rpc();
+    const mint2 = Keypair.generate();
+
+    const [housePda2, ____] = findProgramAddressSync(
+      [utf8.encode("house"), mint.publicKey.toBuffer()],
+      houseProgram.programId
+    );
+
+    const [userPda2, ___] = findProgramAddressSync(
+      [utf8.encode("user"), userWallet.publicKey.toBuffer()],
+      userProgram.programId
+    );
+
+    const tx2 = await houseProgram.methods
+      .initializeHouse(houseName, address, house_number, district, country)
+      .accounts({
+        authority: userWallet.publicKey,
+        mint: mint.publicKey,
+        houseAccount: housePda2,
+        userAccount: userPda2,
+        userProgram: userProgram.programId,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([userWallet])
+      .rpc();
     const user = await userProgram.account.userStruct.fetch(userPda);
     console.log(user);
     console.log("Hosue transaction signature : ", tx);

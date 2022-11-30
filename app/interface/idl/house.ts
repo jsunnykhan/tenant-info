@@ -1,9 +1,9 @@
-export type TenantInfo = {
+export type House = {
   version: "0.1.0";
-  name: "tenant_info";
+  name: "house";
   instructions: [
     {
-      name: "createUser";
+      name: "initializeHouse";
       accounts: [
         {
           name: "authority";
@@ -21,92 +21,21 @@ export type TenantInfo = {
           isSigner: false;
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "fatherName";
-          type: "string";
-        },
-        {
-          name: "dateOfBirth";
-          type: "string";
-        },
-        {
-          name: "status";
-          type: "string";
-        },
-        {
-          name: "parmanentAddress";
-          type: "string";
-        },
-        {
-          name: "occupation";
-          type: "string";
-        },
-        {
-          name: "religion";
-          type: "string";
-        },
-        {
-          name: "education";
-          type: "string";
-        },
-        {
-          name: "nid";
-          type: "string";
-        },
-        {
-          name: "passport";
-          type: "string";
-        },
-        {
-          name: "birthCertificate";
-          type: "string";
-        },
-        {
-          name: "alternativeAddress";
-          type: "string";
-        }
-      ];
-    },
-    {
-      name: "registeredHouse";
-      accounts: [
-        {
-          name: "authority";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "mint";
-          isMut: true;
-          isSigner: false;
-        },
-        {
           name: "houseAccount";
           isMut: true;
           isSigner: false;
         },
         {
-          name: "userAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
           name: "systemProgram";
           isMut: false;
           isSigner: false;
         }
       ];
       args: [
+        {
+          name: "mint";
+          type: "publicKey";
+        },
         {
           name: "name";
           type: "string";
@@ -126,15 +55,11 @@ export type TenantInfo = {
         {
           name: "country";
           type: "string";
-        },
-        {
-          name: "isMultipleOwner";
-          type: "bool";
         }
       ];
     },
     {
-      name: "addAppartment";
+      name: "initializeAppartment";
       accounts: [
         {
           name: "authority";
@@ -143,6 +68,11 @@ export type TenantInfo = {
         },
         {
           name: "mint";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "appartmentAccount";
           isMut: true;
           isSigner: false;
         },
@@ -159,25 +89,41 @@ export type TenantInfo = {
       ];
       args: [
         {
-          name: "appartmentNumber";
+          name: "number";
           type: "string";
         }
       ];
     },
     {
-      name: "addTenant";
-      accounts: [];
-      args: [];
-    },
-    {
-      name: "removeTenant";
-      accounts: [];
-      args: [];
+      name: "removeHouse";
+      accounts: [
+        {
+          name: "authority";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "houseAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "mint";
+          type: "publicKey";
+        }
+      ];
     }
   ];
   accounts: [
     {
-      name: "houseInfo";
+      name: "houseStruct";
       type: {
         kind: "struct";
         fields: [
@@ -188,6 +134,12 @@ export type TenantInfo = {
           {
             name: "mint";
             type: "publicKey";
+          },
+          {
+            name: "appartment";
+            type: {
+              vec: "publicKey";
+            };
           },
           {
             name: "authority";
@@ -201,10 +153,6 @@ export type TenantInfo = {
           },
           {
             name: "houseNumber";
-            type: "string";
-          },
-          {
-            name: "appartments";
             type: "string";
           },
           {
@@ -224,52 +172,16 @@ export type TenantInfo = {
         kind: "struct";
         fields: [
           {
-            name: "owner";
+            name: "authority";
+            type: "publicKey";
+          },
+          {
+            name: "mint";
             type: "publicKey";
           },
           {
             name: "number";
             type: "string";
-          },
-          {
-            name: "familyMember";
-            type: {
-              vec: "publicKey";
-            };
-          }
-        ];
-      };
-    }
-  ];
-  types: [
-    {
-      name: "AddAppartment";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "authority";
-            type: {
-              defined: "Signer<'info>";
-            };
-          },
-          {
-            name: "mint";
-            type: {
-              defined: "AccountInfo<'info>";
-            };
-          },
-          {
-            name: "houseAccount";
-            type: {
-              defined: "Account<'info,Appartment>";
-            };
-          },
-          {
-            name: "systemProgram";
-            type: {
-              defined: "Program<'info,System>";
-            };
           }
         ];
       };
@@ -277,12 +189,12 @@ export type TenantInfo = {
   ];
 };
 
-export const IDL: TenantInfo = {
+export const IDL: House = {
   version: "0.1.0",
-  name: "tenant_info",
+  name: "house",
   instructions: [
     {
-      name: "createUser",
+      name: "initializeHouse",
       accounts: [
         {
           name: "authority",
@@ -300,92 +212,21 @@ export const IDL: TenantInfo = {
           isSigner: false,
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: "name",
-          type: "string",
-        },
-        {
-          name: "fatherName",
-          type: "string",
-        },
-        {
-          name: "dateOfBirth",
-          type: "string",
-        },
-        {
-          name: "status",
-          type: "string",
-        },
-        {
-          name: "parmanentAddress",
-          type: "string",
-        },
-        {
-          name: "occupation",
-          type: "string",
-        },
-        {
-          name: "religion",
-          type: "string",
-        },
-        {
-          name: "education",
-          type: "string",
-        },
-        {
-          name: "nid",
-          type: "string",
-        },
-        {
-          name: "passport",
-          type: "string",
-        },
-        {
-          name: "birthCertificate",
-          type: "string",
-        },
-        {
-          name: "alternativeAddress",
-          type: "string",
-        },
-      ],
-    },
-    {
-      name: "registeredHouse",
-      accounts: [
-        {
-          name: "authority",
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: "mint",
-          isMut: true,
-          isSigner: false,
-        },
-        {
           name: "houseAccount",
           isMut: true,
           isSigner: false,
         },
         {
-          name: "userAccount",
-          isMut: true,
-          isSigner: false,
-        },
-        {
           name: "systemProgram",
           isMut: false,
           isSigner: false,
         },
       ],
       args: [
+        {
+          name: "mint",
+          type: "publicKey",
+        },
         {
           name: "name",
           type: "string",
@@ -406,14 +247,10 @@ export const IDL: TenantInfo = {
           name: "country",
           type: "string",
         },
-        {
-          name: "isMultipleOwner",
-          type: "bool",
-        },
       ],
     },
     {
-      name: "addAppartment",
+      name: "initializeAppartment",
       accounts: [
         {
           name: "authority",
@@ -422,6 +259,11 @@ export const IDL: TenantInfo = {
         },
         {
           name: "mint",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "appartmentAccount",
           isMut: true,
           isSigner: false,
         },
@@ -438,25 +280,41 @@ export const IDL: TenantInfo = {
       ],
       args: [
         {
-          name: "appartmentNumber",
+          name: "number",
           type: "string",
         },
       ],
     },
     {
-      name: "addTenant",
-      accounts: [],
-      args: [],
-    },
-    {
-      name: "removeTenant",
-      accounts: [],
-      args: [],
+      name: "removeHouse",
+      accounts: [
+        {
+          name: "authority",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "houseAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "mint",
+          type: "publicKey",
+        },
+      ],
     },
   ],
   accounts: [
     {
-      name: "houseInfo",
+      name: "houseStruct",
       type: {
         kind: "struct",
         fields: [
@@ -467,6 +325,12 @@ export const IDL: TenantInfo = {
           {
             name: "mint",
             type: "publicKey",
+          },
+          {
+            name: "appartment",
+            type: {
+              vec: "publicKey",
+            },
           },
           {
             name: "authority",
@@ -480,10 +344,6 @@ export const IDL: TenantInfo = {
           },
           {
             name: "houseNumber",
-            type: "string",
-          },
-          {
-            name: "appartments",
             type: "string",
           },
           {
@@ -503,52 +363,16 @@ export const IDL: TenantInfo = {
         kind: "struct",
         fields: [
           {
-            name: "owner",
+            name: "authority",
+            type: "publicKey",
+          },
+          {
+            name: "mint",
             type: "publicKey",
           },
           {
             name: "number",
             type: "string",
-          },
-          {
-            name: "familyMember",
-            type: {
-              vec: "publicKey",
-            },
-          },
-        ],
-      },
-    },
-  ],
-  types: [
-    {
-      name: "AddAppartment",
-      type: {
-        kind: "struct",
-        fields: [
-          {
-            name: "authority",
-            type: {
-              defined: "Signer<'info>",
-            },
-          },
-          {
-            name: "mint",
-            type: {
-              defined: "AccountInfo<'info>",
-            },
-          },
-          {
-            name: "houseAccount",
-            type: {
-              defined: "Account<'info,Appartment>",
-            },
-          },
-          {
-            name: "systemProgram",
-            type: {
-              defined: "Program<'info,System>",
-            },
           },
         ],
       },

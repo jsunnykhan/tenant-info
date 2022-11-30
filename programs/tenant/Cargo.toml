@@ -17,4 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.25.0"
-# house = { path = "../house", features = ["cpi"] }
+house = { path = "../house", features = ["cpi"] }

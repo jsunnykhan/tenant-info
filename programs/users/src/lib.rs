@@ -1,8 +1,6 @@
 use anchor_lang::prelude::*;
 
-// use anchor_lang::solana_program::*;
-
-declare_id!("2doNBKXzGi4Q3BfKFvkc68p4jePukDQpAtR1n8Nhzz51");
+declare_id!("8tvCCdaRyiTWZudZPFnzas32QzrBETTkCmvdtedCa2w8");
 
 #[program]
 pub mod users {
@@ -30,15 +28,9 @@ pub mod users {
         Ok(())
     }
 
-    pub fn remove_user (ctx: Context<RemoveUser>) -> Result<()> {
+    pub fn remove_user (_ctx: Context<RemoveUser>) -> Result<()> {
         // Donot remove this functions because it's a working function
-        // let user = &mut ctx.accounts.user_account;
-
-        // if user.mint.len() > 0 {
-        //     for mint in user.mint.iter() {
-        //         let (pda , _bump) =  Pubkey::find_program_address(&[b"house", &mut mint.key().as_ref()], House);
-        //     }
-        // }
+        
         Ok(())
     }
 }
@@ -52,7 +44,7 @@ pub struct Initialize<'info> {
         seeds = [ b"user".as_ref() , authority.key().as_ref()],
         bump,
         payer = authority,
-        space = 8 + std::mem::size_of::<UserStruct>() + 32 * 50
+        space = 8 + std::mem::size_of::<UserStruct>() + (32 * 50)
     )]
     pub user_account : Box<Account<'info , UserStruct>>,
     pub system_program : Program<'info , System>

@@ -1,10 +1,8 @@
-import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import { useEffect, useMemo, useState } from "react";
-import { useProgram } from "./useProgram";
 import * as anchor from "@project-serum/anchor";
-import { IDL as usersIdl, Users } from "../interface/userIdl";
+import { IDL as usersIdl, Users } from "../interface/idl/users";
 import {
   useAnchorWallet,
   useConnection,
@@ -17,7 +15,6 @@ export const useUser = () => {
   const [userProgramId, setUserProgramId] = useState<PublicKey | undefined>();
   const { connection } = useConnection();
   const anchorWallet = useAnchorWallet();
-  // const { userProgram } = useProgram();
 
   useEffect(() => {
     if (ID) {
@@ -46,10 +43,10 @@ export const useUser = () => {
           [USER_SEEDS, pubKey.toBuffer()],
           program.programId
         );
-        const tx: any = await program.account.userStruct.fetch(userPda);
-        return tx;
+        const user: any = await program.account.userStruct.fetch(userPda);
+        return user;
       } catch (error) {
-        return error;
+        return null;
       }
     }
   };
@@ -76,7 +73,6 @@ export const useUser = () => {
           })
           .rpc();
 
-        console.log(tx);
         return tx;
       } catch (error) {
         console.log(error);
@@ -84,24 +80,34 @@ export const useUser = () => {
     }
   };
 
-  const removeUser = async (pubKey: PublicKey) => {
-    if (program) {
-      const [userPda, _] = findProgramAddressSync(
-        [USER_SEEDS, pubKey.toBuffer()],
-        program.programId
-      );
+  const removeUser = async (pubKey: PublicKey, removeHouse: Function) => {
+    try {
+      if (program) {
+        const [userPda, _] = findProgramAddressSync(
+          [USER_SEEDS, pubKey.toBuffer()],
+          program.programId
+        );
 
-      try {
-        const tx = await program.methods
-          .removeUser()
-          .accounts({
-            authority: pubKey,
-            userAccount: userPda,
-            systemProgram: SystemProgram.programId,
-          })
-          .rpc();
-      } catch (error) {}
-    }
+        const user = await getUserInfomation(pubKey);
+        if (!user.mint.length) {
+          const tx = await program.methods
+            .removeUser()
+            .accounts({
+              authority: pubKey,
+              userAccount: userPda,
+              systemProgram: SystemProgram.programId,
+            })
+            .rpc();
+        }
+
+        if (user?.mint?.length) {
+          const tx = await Promise.all(
+            user.mint.map(async (d: PublicKey) => await removeHouse(d, pubKey))
+          );
+          console.log(tx);
+        }
+      }
+    } catch (error) {}
   };
 
   return { getUserInfomation, initUser, removeUser };

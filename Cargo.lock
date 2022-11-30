@@ -1226,6 +1226,7 @@ name = "tenant"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
+ "house",
 ]
 
 [[package]]

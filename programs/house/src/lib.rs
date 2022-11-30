@@ -4,7 +4,7 @@ use users::cpi::accounts::SetMintKey;
 use users::program::Users;
 use users::{self, UserStruct};
 
-declare_id!("4EvrmhUeoupG5RKbQuoZsD1gF3t3TKCsnLvvGXGj1urK");
+declare_id!("6dQaZCBoSA3ttieiDTwpJiQoW4utY9CB64A485XzQyHd");
 
 #[program]
 pub mod house {
@@ -12,6 +12,7 @@ pub mod house {
 
     pub fn initialize_house(
         ctx: Context<InitializeHouse>,
+        mint:Pubkey ,
         name: String,
         address: String,
         house_number: String,
@@ -19,7 +20,7 @@ pub mod house {
         country: String,
     ) -> Result<()> {
         let house = &mut ctx.accounts.house_account;
-        let mint = &mut ctx.accounts.mint;
+        // let mint = &mut ctx.accounts.mint;
         let authority = &mut ctx.accounts.authority;
 
         house.name = name;
@@ -30,7 +31,7 @@ pub mod house {
         house.authority = Some(authority.key());
         house.mint = mint.key();
 
-        users::cpi::add_mint_key(ctx.accounts.set_mint_ctx(), ctx.accounts.mint.key())?;
+        users::cpi::add_mint_key(ctx.accounts.set_mint_ctx(), mint.key())?;
 
         Ok(())
     }
@@ -45,15 +46,21 @@ pub mod house {
 
         Ok(())
     }
+
+
+    pub fn remove_house(_ctx : Context<RemoveHouse> , _mint : Pubkey)  -> Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
+#[instruction(mint:Pubkey)]
 pub struct InitializeHouse<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
-    #[account(mut)]
-    /// CHECK: This is not dangerous we don't read or write from this account
-    pub mint: AccountInfo<'info>,
+    // #[account(mut)]
+    // /// CHECK: This is not dangerous we don't read or write from this account
+    // pub mint: AccountInfo<'info>,
     #[account(mut , has_one = authority)]
     pub user_account: Account<'info, UserStruct>,
     pub user_program: Program<'info, Users>,
@@ -62,7 +69,7 @@ pub struct InitializeHouse<'info> {
         seeds = [b"house".as_ref(), mint.key().as_ref()],
         bump,
         payer = authority,
-        space = 8 + std::mem::size_of::<HouseStruct>() + 32 * 50
+        space = 8 + std::mem::size_of::<HouseStruct>() + (32 * 20)
      )]
     pub house_account: Box<Account<'info, HouseStruct>>,
 
@@ -100,6 +107,22 @@ pub struct InitializeAppartment<'info> {
     #[account(mut)]
     pub house_account: Account<'info, HouseStruct>,
     pub system_program: Program<'info, System>,
+}
+
+
+#[derive(Accounts)]
+#[instruction(mint : Pubkey)]
+pub struct RemoveHouse<'info> {
+    #[account(mut)]
+    pub authority : Signer<'info>,
+    #[account(
+        mut ,
+        close = authority, 
+        seeds = [ b"house".as_ref() , mint.key().as_ref()],
+        bump,
+    )]
+    pub house_account : Box<Account<'info , HouseStruct>>,
+    pub system_program : Program<'info , System>
 }
 
 #[account]
